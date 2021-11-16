@@ -542,6 +542,10 @@ class PickerModule extends ReactContextBaseJavaModule implements ActivityEventLi
                             Bitmap bmp = validateVideo(videoPath);
                             long modificationDate = new File(videoPath).lastModified();
                             long duration = getVideoDuration(videoPath);
+                            
+                            String contentUri = FileProvider.getUriForFile(activity,
+                            activity.getApplicationContext().getPackageName() + ".provider",
+                            new File(videoPath)).toString();
 
                             WritableMap video = new WritableNativeMap();
                             video.putInt("width", bmp.getWidth());
@@ -549,7 +553,7 @@ class PickerModule extends ReactContextBaseJavaModule implements ActivityEventLi
                             video.putString("mime", mime);
                             video.putInt("size", (int) new File(videoPath).length());
                             video.putInt("duration", (int) duration);
-                            video.putString("path", "file://" + videoPath);
+                            video.putString("path", contentUri);
                             video.putString("modificationDate", String.valueOf(modificationDate));
 
                             resultCollector.notifySuccess(video);
@@ -614,8 +618,12 @@ class PickerModule extends ReactContextBaseJavaModule implements ActivityEventLi
         String compressedImagePath = compressedImage.getPath();
         BitmapFactory.Options options = validateImage(compressedImagePath);
         long modificationDate = new File(path).lastModified();
+        
+        String contentUri = FileProvider.getUriForFile(activity,
+                activity.getApplicationContext().getPackageName() + ".provider",
+                new File(compressedImagePath)).toString();
 
-        image.putString("path", "file://" + compressedImagePath);
+        image.putString("path", contentUri);
         image.putInt("width", options.outWidth);
         image.putInt("height", options.outHeight);
         image.putString("mime", options.outMimeType);
