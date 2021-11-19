@@ -543,9 +543,13 @@ class PickerModule extends ReactContextBaseJavaModule implements ActivityEventLi
                             long modificationDate = new File(videoPath).lastModified();
                             long duration = getVideoDuration(videoPath);
                             
-                            String contentUri = FileProvider.getUriForFile(activity,
-                            activity.getApplicationContext().getPackageName() + ".provider",
-                            new File(videoPath)).toString();
+                            String contentUri = videoPath;
+        
+                            if (contentUri.startsWith("content") == false) {
+                                contentUri = FileProvider.getUriForFile(activity,
+                                activity.getApplicationContext().getPackageName() + ".provider",
+                                new File(videoPath)).toString();
+                            }
 
                             WritableMap video = new WritableNativeMap();
                             video.putInt("width", bmp.getWidth());
@@ -619,9 +623,13 @@ class PickerModule extends ReactContextBaseJavaModule implements ActivityEventLi
         BitmapFactory.Options options = validateImage(compressedImagePath);
         long modificationDate = new File(path).lastModified();
         
-        String contentUri = FileProvider.getUriForFile(activity,
-                activity.getApplicationContext().getPackageName() + ".provider",
-                new File(compressedImagePath)).toString();
+        String contentUri = compressedImagePath;
+        
+        if (contentUri.startsWith("content") == false) {
+            contentUri = FileProvider.getUriForFile(activity,
+            activity.getApplicationContext().getPackageName() + ".provider",
+            new File(compressedImagePath)).toString();
+        }
 
         image.putString("path", contentUri);
         image.putInt("width", options.outWidth);
